@@ -1,0 +1,208 @@
+%-------------------------
+% Resume in LaTeX
+% Author: Jake Gutierrez (with cleanup)
+% Based on: https://github.com/sb2nov/resume
+% License: MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+% Packages
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\usepackage{xcolor}
+\input{glyphtounicode}
+
+% Font options commented out for reference
+% Sans-serif options:
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+% 
+% Serif options:
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+% Page setup
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.19in}
+\addtolength{\topmargin}{-.7in}
+\addtolength{\textheight}{1.4in}
+
+% Layout settings
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+\setlength{\multicolsep}{-3.0pt}
+\setlength{\columnsep}{-1pt}
+
+% Ensure PDF is machine readable/ATS parsable
+\pdfgentounicode=1
+
+% Section formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large\bfseries
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{#1 \vspace{-2pt}}
+}
+
+\newcommand{\classesList}[4]{
+  \item\small{#1 #2 #3 #4 \vspace{-2pt}}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+  \begin{tabular*}{1.0\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & \textbf{\small #2} \\
+    \textit{\small#3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+  \item
+  \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \textit{\small#1} & \textit{\small #2} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+  \item
+  \begin{tabular*}{1.001\textwidth}{l@{\extracolsep{\fill}}r}
+    \small#1 & \textbf{\small #2}\\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+% List settings
+\renewcommand\labelitemi{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+  {\Huge \scshape Parik Kukreja} \\ \vspace{1pt}
+  6242 Chatham Dr S, Seattle, WA 98118 \\ \vspace{1pt}
+  \small 
+  \raisebox{-0.1\height}\faPhone\ 206-883-1615 ~ 
+  \href{mailto:kukrejaparik@gmail.com}{\raisebox{-0.2\height}\faEnvelope\ \underline{kukrejaparik@gmail.com}} ~ 
+  \href{https://linkedin.com/in/parikkukreja/}{\raisebox{-0.2\height}\faLinkedin\ \underline{linkedin.com/in/parikkukreja}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {University of Washington, Seattle}{Expected Graduation: Spring 2027}
+    {Bachelor of Science in Computer Science; GPA: 3.8}{Seattle, Washington}
+\resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Starfish Space}{September 2025 -- December 2025}
+    {Incoming Flight Software Engineer}{Seattle, WA}
+    
+  \resumeSubheading
+    {Amazon}{June 2025 -- September 2025}
+    {Incoming SDE Intern}{Sunnyvale, CA}
+    
+  \resumeSubheading
+    {Roby}{June 2024 -- October 2024}
+    {Software Engineering Intern}{Seattle, WA}
+    \resumeItemListStart
+      \resumeItem{Spearheaded the end-to-end development of a Python-based automation tool for mapping HVAC unit IDs to corresponding room names, leveraging Google Cloud Vision's AI for image recognition.}
+      \resumeItem{Optimized image preprocessing using Python libraries like OpenCV and PIL, improving the quality of optical character recognition in floor plans and BMS screenshots.}
+      \resumeItem{Developed the frontend using React for dynamic interfaces, Tailwind CSS for responsive design, and JavaScript for interactivity. Integrated with a Flask backend to handle API requests and data flow.}
+      \resumeItem{Delivered a highly effective end product, deployed in the company's GPT interface, that accurately linked HVAC unit IDs to corresponding rooms with up to 95\% accuracy, significantly enhancing the efficiency and precision of building management processes.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Armoire}{June 2024 -- August 2024}
+    {Software Engineering Intern}{Seattle, WA}
+    \resumeItemListStart
+      \resumeItem{Streamlined the checkout process, implementing several key improvements that resulted in a 10\% decrease in shopping cart abandonment rate.}
+      \resumeItem{Enhanced internal tools, resulting in faster processing times and successfully locating and correcting 800+ units of misplaced or misidentified inventory.}
+      \resumeItem{Overhauled the six-year-old Stylist Catwalk Tool, optimizing code structure and enhancing overall performance to boost efficiency for stylists.}
+      \resumeItem{Leveraged a comprehensive set of development tools including GitHub for version control and collaboration, Docker for consistent environment management, and AWS Elastic Beanstalk for automated deployment and application monitoring.}
+    \resumeItemListEnd
+    
+  \resumeSubheading
+    {WiBotic}{October 2022 -- November 2022}
+    {Engineering Intern}{Seattle, WA}
+    \resumeItemListStart
+      \resumeItem{Assembled over 50 charging modules from raw parts and blueprints, ensuring precise alignment with engineering specifications.}
+      \resumeItem{Conducted rigorous testing of each charging module to validate functionality and adherence to quality standards.}
+      \resumeItem{Catalogued and managed over 5,000 units of inventory using SOS inventory manager, maintaining an organized and up-to-date parts database.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vspace{-16pt}
+
+%-----------PROJECTS-----------
+\section{Extracurricular Activities/Outside Coursework}
+\vspace{-5pt}
+\resumeSubHeadingListStart
+  \resumeProjectHeading
+    {\textbf{Introduction to Quantum Computing (July 2022 - August 2022): }{Gained an introductory knowledge of quantum\\\qquad
+    computing through daily lectures, labs, and homework assignments. Class covered linear algebra, coding with \\\qquad Qiskit, quantum
+    mechanics, quantum algorithms, and quantum applications.}}
+    
+  \vspace{-13pt}
+  \resumeProjectHeading
+    {\textbf{Inspirit AI Scholars Live Online (June 2022 -- July 2022): }{Learned basic AI and ML concepts over the course of 25 \\\qquad hours of
+    instruction and guided coding, culminating in designing, training, and testing a model to identify\\\qquad human emotion expressed in images.}}
+
+
+\resumeSubHeadingListEnd
+\vspace{-15pt}
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \small{\item{
+    \textbf{Languages}{: Python, Java, HTML/CSS, JavaScript, SQL, C, C++} \\
+    \textbf{Developer Tools}{: GIT, VS Code, Google Cloud Vision API, PyCharm, Sentry.io, Cursor} \\
+    \textbf{Technologies/Frameworks}{: WSL, GitHub, JUnit, Docker, AWS Elastic Beanstalk, Node.js, Django, OpenCV}
+  }}
+\end{itemize}
+\vspace{-16pt}
+
+%-----------HOBBIES---------------
+\section{Hobbies/Interests - \small Magic: the Gathering, (American) Football, Swimming, Online Gaming, Tom Petty}
+\vspace{-16pt}
+
+\end{document}
