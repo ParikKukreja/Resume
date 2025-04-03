@@ -60,7 +60,6 @@ jobs:
         git push origin main
 
     - name: Setup Node.js
-      working-directory: website
       uses: actions/setup-node@v4
       with:
         node-version: '20'
