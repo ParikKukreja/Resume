@@ -1,38 +1,30 @@
 name: Update Resume PDF
-
 on:
   push:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository content
       uses: actions/checkout@v4
-
+      
     - name: Set up LaTeX
       run: |
         sudo apt-get update
         sudo apt-get install -y texlive-latex-extra texlive-lang-all texlive-fonts-extra latexmk
-
-    - name: Set up LaTeX environment
-      uses: dante-ev/latex-action@latest
-      with:
-        root_file: main.tex
-
-    - name: Clean Up
-      run: latexmk -C
-
+    
+    - name: Clean LaTeX files
+      run: |
+        rm -f *.aux *.log *.out *.toc *.lof *.lot *.bbl *.bcf *.blg *.run.xml *.fls *.fdb_latexmk *.pdf
+        echo "Cleaned previous LaTeX files"
+    
     - name: Compile LaTeX document
-      run: latexmk -pdf -silent -cd main.tex
-
-    - name: Display LaTeX Log
-      if: failure()
-      run: cat main.log
-
+      run: |
+        latexmk -pdf -f -g main.tex
+        echo "Compilation completed"
+        
     - name: Verify PDF Generation
       run: |
         if [ ! -f main.pdf ]; then
@@ -40,8 +32,10 @@ jobs:
           ls -la
           exit 1
         fi
-        echo "PDF size: $(ls -lh main.pdf | awk '{print $5}')"
-
+        echo "PDF generated successfully:"
+        ls -lh main.pdf
+        echo "PDF checksum: $(md5sum main.pdf | cut -d' ' -f1)"
+    
     - name: Checkout website repo
       uses: actions/checkout@v4
       with:  
@@ -49,7 +43,7 @@ jobs:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         path: website
         persist-credentials: true
-
+    
     - name: Verify Website Directory Structure
       run: |
         echo "Current directory: $(pwd)"
@@ -57,30 +51,39 @@ jobs:
         ls -la website/
         echo "Public directory contents:"
         ls -la website/public/
-
-    - name: delete old resume pdf
+    
+    - name: Check existing PDF
       run: |
         if [ -f website/public/main.pdf ]; then
-          echo "Removing old PDF..."
-          rm -f website/public/main.pdf
+          echo "Existing PDF details:"
+          ls -lh website/public/main.pdf
+          echo "Existing PDF checksum: $(md5sum website/public/main.pdf | cut -d' ' -f1)"
         else
-          echo "No old PDF found to remove"
+          echo "No existing PDF found"
         fi
-
-    - name: copy new resume to website
+    
+    - name: Remove existing PDF
       run: |
-        echo "Current directory: $(pwd)"
-        echo "Copying PDF..."
-        cp ./main.pdf website/public/
+        rm -f website/public/main.pdf
+        if [ -f website/public/main.pdf ]; then
+          echo "Error: Failed to remove existing PDF!"
+          exit 1
+        else
+          echo "Successfully removed old PDF"
+        fi
+    
+    - name: Copy new resume to website
+      run: |
+        cp -f ./main.pdf website/public/
         if [ ! -f website/public/main.pdf ]; then
           echo "Error: PDF was not copied successfully!"
-          ls -la website/public/
           exit 1
         fi
-        echo "PDF copied successfully"
+        echo "New PDF copied successfully:"
         ls -lh website/public/main.pdf
-
-    - name: commit and push to website repo
+        echo "Copied PDF checksum: $(md5sum website/public/main.pdf | cut -d' ' -f1)"
+    
+    - name: Commit and push to website repo
       working-directory: website
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -89,46 +92,40 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/ParikKukreja/Personal-Website.git
         
-        # Verify the file is staged
+        # Add the file and check for changes
+        git add -f public/main.pdf
+        
+        # Get the PDF checksum for the commit message
+        PDF_CHECKSUM=$(md5sum public/main.pdf | cut -d' ' -f1)
+        
+        # Show status
         git status
         
-        git add public/main.pdf
-        
-        # Verify the file was added
-        git status
-        
-        git commit -m "updated resume"
-        
-        # Show what will be pushed
-        git show --stat
-        
-        git push origin main
-
-    - name: Verify Deployment Files
-      working-directory: website
-      run: |
-        echo "Verifying files after push..."
-        ls -la public/
-        if [ ! -f public/main.pdf ]; then
-          echo "Error: PDF is not in public directory after push!"
-          exit 1
+        # Commit and push if there are changes
+        if git diff --staged --quiet; then
+          echo "No changes detected in the PDF. Skipping commit."
+        else
+          echo "Changes detected. Committing and pushing..."
+          git commit -m "Updated resume (MD5: $PDF_CHECKSUM)"
+          git push origin main
+          echo "Changes pushed successfully"
         fi
-
+    
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-
+    
     - name: Install dependencies
       working-directory: website
       run: npm install
-
+    
     - name: Deploy to GitHub Pages
       working-directory: website
       run: npm run deploy
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
+    
     - name: Verify Deployment
       run: |
         echo "Waiting for deployment to complete..."
