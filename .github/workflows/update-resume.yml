@@ -58,3 +58,9 @@ jobs:
         git add public/main.pdf
         git commit -m "updated resume"
         git push origin main
+
+    - name: Deploy to GitHub Pages
+      working-directory: website
+      run: |
+        npm install
+        npm run deploy
