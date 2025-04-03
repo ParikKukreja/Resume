@@ -40,11 +40,12 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         path: website
         persist-credentials: true
+
     - name: delete old resume pdf
-      run: rm website/public/main.pdf
+      run: rm -f website/public/main.pdf
 
     - name: copy new resume to website
-      run: cp main.pdf website/public
+      run: cp main.pdf website/public/
 
     - name: commit and push to website repo
       working-directory: website
