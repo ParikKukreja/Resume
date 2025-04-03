@@ -33,6 +33,15 @@ jobs:
       if: failure()
       run: cat main.log
 
+    - name: Verify PDF Generation
+      run: |
+        if [ ! -f main.pdf ]; then
+          echo "Error: main.pdf was not generated!"
+          ls -la
+          exit 1
+        fi
+        echo "PDF size: $(ls -lh main.pdf | awk '{print $5}')"
+
     - name: Checkout website repo
       uses: actions/checkout@v4
       with:  
@@ -41,11 +50,35 @@ jobs:
         path: website
         persist-credentials: true
 
+    - name: Verify Website Directory Structure
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Website directory contents:"
+        ls -la website/
+        echo "Public directory contents:"
+        ls -la website/public/
+
     - name: delete old resume pdf
-      run: rm -f website/public/main.pdf
+      run: |
+        if [ -f website/public/main.pdf ]; then
+          echo "Removing old PDF..."
+          rm -f website/public/main.pdf
+        else
+          echo "No old PDF found to remove"
+        fi
 
     - name: copy new resume to website
-      run: cp main.pdf website/public/
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Copying PDF..."
+        cp ./main.pdf website/public/
+        if [ ! -f website/public/main.pdf ]; then
+          echo "Error: PDF was not copied successfully!"
+          ls -la website/public/
+          exit 1
+        fi
+        echo "PDF copied successfully"
+        ls -lh website/public/main.pdf
 
     - name: commit and push to website repo
       working-directory: website
@@ -55,9 +88,31 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/ParikKukreja/Personal-Website.git
+        
+        # Verify the file is staged
+        git status
+        
         git add public/main.pdf
+        
+        # Verify the file was added
+        git status
+        
         git commit -m "updated resume"
+        
+        # Show what will be pushed
+        git show --stat
+        
         git push origin main
+
+    - name: Verify Deployment Files
+      working-directory: website
+      run: |
+        echo "Verifying files after push..."
+        ls -la public/
+        if [ ! -f public/main.pdf ]; then
+          echo "Error: PDF is not in public directory after push!"
+          exit 1
+        fi
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -73,3 +128,9 @@ jobs:
       run: npm run deploy
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    - name: Verify Deployment
+      run: |
+        echo "Waiting for deployment to complete..."
+        sleep 30
+        curl -I https://parikkukreja.github.io/main.pdf || echo "PDF not yet available"
