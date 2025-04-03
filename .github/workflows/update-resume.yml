@@ -59,8 +59,18 @@ jobs:
         git commit -m "updated resume"
         git push origin main
 
+    - name: Setup Node.js
+      working-directory: website
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      working-directory: website
+      run: npm install
+
     - name: Deploy to GitHub Pages
       working-directory: website
-      run: |
-        npm install
-        npm run deploy
+      run: npm run deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
