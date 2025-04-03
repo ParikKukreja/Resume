@@ -1,0 +1,59 @@
+name: Update Resume PDF
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository content
+      uses: actions/checkout@v4
+
+    - name: Set up LaTeX
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-extra texlive-lang-all texlive-fonts-extra latexmk
+
+    - name: Set up LaTeX environment
+      uses: dante-ev/latex-action@latest
+      with:
+        root_file: main.tex
+
+    - name: Clean Up
+      run: latexmk -C
+
+    - name: Compile LaTeX document
+      run: latexmk -pdf -silent -cd main.tex
+
+    - name: Display LaTeX Log
+      if: failure()
+      run: cat main.log
+
+    - name: Checkout website repo
+      uses: actions/checkout@v4
+      with:  
+        repository: ParikKukreja/Personal-Website
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: website
+        persist-credentials: true
+    - name: delete old resume pdf
+      run: rm website/public/main.pdf
+
+    - name: copy new resume to website
+      run: cp main.pdf website/public
+
+    - name: commit and push to website repo
+      working-directory: website
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config --unset-all http.https://github.com/.extraheader
+        git add public/main.pdf
+        git commit -m "updated resume"
+        git push origin main
